@@ -1,11 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Ma+Shan+Zheng&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Happy New Year Linh</title>
+    <style>
+        @keyframes float-up {
+            0% {
+                transform: translateY(0%) translateX(0) scale(0.5);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            80% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-100vh) translateX(var(--tx)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .bubble {
+            animation: float-up linear infinite;
+            animation-duration: var(--duration);
+            animation-delay: var(--delay);
+            filter: drop-shadow(0 0 10px rgba(255, 182, 193, 0.5));
+        }
+
+        @keyframes gradient-bg {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .moving-bg {
+            background: linear-gradient(-45deg, #FFEDFA, #FFC0CB, #E0F2FE, #F3E5F5, #FFB6C1);
+            background-size: 400% 400%;
+            animation: gradient-bg 20s ease infinite;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        .moving-bg::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .glow-circle {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+            animation: pulse 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+
+            100% {
+                transform: scale(1.5) translate(50px, 50px);
+            }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes float-gentle {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(3deg);
+            }
+        }
+
+        .float-icon {
+            animation: float-gentle 4s ease-in-out infinite;
+        }
+
+        /* Sparkle Animation */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .sparkle {
+            position: absolute;
+            background: var(--star-color, white);
+            filter: drop-shadow(0 0 5px var(--star-color, white));
+            animation: twinkle var(--t-duration) ease-in-out infinite;
+            animation-delay: var(--t-delay);
+            pointer-events: none;
+        }
+
+        .star-4 { clip-path: polygon(50% 0%, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0% 50%, 40% 40%); }
+        .star-5 { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+        .star-6 { clip-path: polygon(50% 0%, 65% 25%, 100% 25%, 80% 50%, 100% 75%, 65% 75%, 50% 100%, 35% 75%, 0% 75%, 20% 50%, 0% 25%, 35% 25%); }
+
+        /* Scroll Reveal Styles */
+        .reveal {
+            opacity: 0;
+            transition: all 1s ease-out;
+        }
+
+        .reveal.reveal-up {
+            transform: translateY(50px);
+        }
+
+        .reveal.reveal-down {
+            transform: translateY(-50px);
+        }
+
+        .reveal.reveal-left {
+            transform: translateX(-50px);
+        }
+
+        .reveal.reveal-right {
+            transform: translateX(50px);
+        }
+
+        .reveal.reveal-scale {
+            transform: scale(0.8);
+        }
+
+        .reveal.show {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #slide-bg, #slide-photo {
+            transition: opacity 0.6s ease-in-out, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-image 0s;
+        }
+
+        .slide-changing {
+            opacity: 0 !important;
+            transform: scale(1.1) !important;
+        }
+
+        #slide-photo.slide-changing {
+            transform: scale(0.9) rotate(-2deg) !important;
+        }
+    </style>
 </head>
-<body>
-    test
+
+<body class="moving-bg font-[Dancing_Script,Ma_Shan_Zheng,serif] overflow-x-hidden">
+    <div class="glow-circle size-96 bg-pink-300 top-[-10%] left-[-10%]"></div>
+    <div class="glow-circle w-120 h-120 bg-blue-200 bottom-[-10%] right-[-10%]" style="animation-delay: -2s;"></div>
+    <div class="glow-circle size-80 bg-purple-200 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        style="animation-delay: -5s;"></div>
+    <canvas id="particles-canvas"></canvas>
+    <section id="top">
+        <div class="m-auto box-border w-full max-w-286 px-4 md:px-8 relative py-12 reveal reveal-scale">
+            <div class="relative aspect-3/4 md:aspect-video w-full max-w-270 m-auto">
+                <img class="absolute bottom-0 left-1/2 -translate-x-1/2 drop-shadow-2xl aspect-237/350 h-3/4 md:h-3/5 w-auto transition-transform hover:scale-105 duration-700 reveal reveal-up"
+                    src="assets/images/top.png" alt="" />
+                
+                <!-- Colorful Sparkling Stars (4, 5, 6 points) -->
+                <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                    <div class="sparkle star-4 size-4 top-[10%] left-[20%]" style="--t-duration: 3s; --t-delay: 0s; --star-color: #FFD700;"></div>
+                    <div class="sparkle star-5 size-6 top-[30%] left-[10%]" style="--t-duration: 4s; --t-delay: 1s; --star-color: #FF69B4;"></div>
+                    <div class="sparkle star-6 size-5 top-[15%] left-[80%]" style="--t-duration: 3.5s; --t-delay: 0.5s; --star-color: #87CEEB;"></div>
+                    <div class="sparkle star-4 size-8 top-[50%] left-[92%]" style="--t-duration: 5s; --t-delay: 2s; --star-color: #FFD700;"></div>
+                    <div class="sparkle star-5 size-4 top-[70%] left-[15%]" style="--t-duration: 4.5s; --t-delay: 1.5s; --star-color: #FFB6C1;"></div>
+                    <div class="sparkle star-6 size-6 top-[80%] left-[85%]" style="--t-duration: 3.2s; --t-delay: 0.2s; --star-color: #ADD8E6;"></div>
+                    <div class="sparkle star-4 size-5 top-[20%] left-[50%]" style="--t-duration: 4s; --t-delay: 0.8s; --star-color: #FFFACD;"></div>
+                    <div class="sparkle star-5 size-6 top-[40%] left-[88%]" style="--t-duration: 3.8s; --t-delay: 1.2s; --star-color: #F08080;"></div>
+                    <div class="sparkle star-6 size-4 top-[5%] left-[45%]" style="--t-duration: 5.5s; --t-delay: 0.3s; --star-color: #E0FFFF;"></div>
+                </div>
+
+                <!-- Original icons with slightly better sizes -->
+                <img class="absolute top-8/12 -left-4 w-16 md:w-24 md:left-0 z-0 float-icon reveal reveal-left"
+                    style="animation-delay: 0.s;" src="assets/images/temple.png" alt="" />
+                <img class="absolute top-3/12 -left-2 w-10 md:w-16 md:left-2/12 z-0 float-icon reveal reveal-left"
+                    style="animation-delay: 1.5s;" src="assets/images/milk_tea.png" alt="" />
+                <img class="absolute top-0 left-1/12 w-16 md:w-24 md:left-3/12 z-0 float-icon reveal reveal-up"
+                    style="animation-delay: 0.8s;" src="assets/images/dress.png" alt="" />
+                <img class="absolute top-1/12 right-0 w-16 md:w-24 md:left-8/12 z-0 float-icon reveal reveal-right"
+                    style="animation-delay: 2.2s;" src="assets/images/camera.png" alt="" />
+                <img class="absolute top-6/12 -right-4 w-16 md:w-24 md:left-10/12 z-0 float-icon reveal reveal-right"
+                    style="animation-delay: 1.2s;" src="assets/images/notebook.png" alt="" />
+                <svg viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    class="absolute bottom-0 left-1/2 -translate-x-1/2 h-full md:h-4/5 pointer-events-none reveal reveal-scale">
+                    <defs>
+                        <linearGradient id="grad-demo" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#f59e0b"></stop>
+                            <stop offset="100%" stop-color="#ef4444"></stop>
+                        </linearGradient>
+                    </defs>
+                    <path id="custom-path" d="M68 435.93C87.3571 215.145 209.034 -12.5148 363.007 147.953" fill="none">
+                    </path><text font-size="40" font-weight="700" fill="url(#grad-demo)"
+                        font-family="&#x27;Poppins&#x27;, sans-serif" letter-spacing="10">
+                        <textPath href="#custom-path" startOffset="50%" text-anchor="middle" method="stretch">Diệu
+                            　　Linh 　　PT</textPath>
+                    </text>
+                </svg>
+            </div>
+        </div>
+    </section>
+    <section id="study" class="py-10 md:py-20">
+        <div class="m-auto box-border w-full max-w-286 px-4 md:px-8">
+            <div class="flex flex-col md:flex-row w-full items-center gap-8 glass-card p-6 md:p-10 reveal reveal-up">
+                <div class="w-full md:max-w-5/20 rounded-2xl overflow-hidden shadow-lg"><video autoplay muted loop
+                        controls>
+                        <source src="assets/videos/book.mp4" type="video/mp4">
+                        Trình duyệt của bạn không hỗ trợ video HTML5
+                    </video></div>
+                <div class="p-8 text-center w-full grid place-items-center text-2xl">
+                    <p>Stop, wait a minute, the way you move that, boy<br>
+                        You done got my heart all in it<br>
+                        And I just wanna be with you tonight<br>
+                        Boy, please, I'm a player, yeah, it's true<br>
+                        But I changed the game for you<br>
+                        I wanna see what it do</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="beaty" class="py-10 md:py-20">
+        <div class="m-auto box-border w-full max-w-286 px-4 md:px-8 ">
+            <div
+                class="flex flex-col md:flex-row-reverse w-full items-center gap-8 glass-card p-6 md:p-10 reveal reveal-up">
+                <div class="w-full md:max-w-5/20 rounded-2xl overflow-hidden shadow-lg"><video autoplay muted loop
+                        controls>
+                        <source src="assets/videos/makeup.mp4" type="video/mp4">
+                        Trình duyệt của bạn không hỗ trợ video HTML5
+                    </video></div>
+                <div class="p-8 text-center w-full grid place-items-center text-2xl">
+                    <p>想把你抱进身体里面 不敢让你看见<br>
+                        嘴角那颗没落下的泪<br>
+                        如果这是最后一页 在你离开之前<br>
+                        能否让我把故事重写</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="slider" class="py-10 md:py-20">
+        <div class="h-auto md:h-100 relative">
+            <div id="slide-bg" class="absolute blur-md w-full h-full -z-1 bg-cover bg-center"></div>
+            <div
+                class="m-auto box-border w-full h-full max-w-286 px-4 md:px-8 flex flex-col md:flex-row items-center gap-8 p-6 md:p-10 reveal reveal-scale">
+                <div id="slide-photo"
+                    class="aspect-square bg-cover w-full md:h-full md:w-auto rounded-2xl overflow-hidden shrink-0">
+                </div>
+                <!-- Slider main container -->
+                <div class="swiper w-full md:w-100 ml-auto mr-0" style="margin-right: 0;">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                        <!-- Slides -->
+                        <div class="swiper-slide rounded-xl overflow-hidden aspect-square"><img
+                                src="assets/images/linh1.jpg" class="select-none w-full h-full object-cover" alt="">
+                        </div>
+                        <div class="swiper-slide rounded-xl overflow-hidden aspect-square"><img
+                                src="assets/images/linh2.jpg" class="select-none w-full h-full object-cover" alt="">
+                        </div>
+                        <div class="swiper-slide rounded-xl overflow-hidden aspect-square"><img
+                                src="assets/images/linh3.jpg" class="select-none w-full h-full object-cover" alt="">
+                        </div>
+                        <div class="swiper-slide rounded-xl overflow-hidden aspect-square"><img
+                                src="assets/images/linh1.jpg" class="select-none w-full h-full object-cover" alt="">
+                        </div>
+                        <div class="swiper-slide rounded-xl overflow-hidden aspect-square"><img
+                                src="assets/images/linh2.jpg" class="select-none w-full h-full object-cover" alt="">
+                        </div>
+                        <div class="swiper-slide rounded-xl overflow-hidden aspect-square"><img
+                                src="assets/images/linh3.jpg" class="select-none w-full h-full object-cover" alt="">
+                        </div>
+                        <div class="swiper-slide rounded-xl overflow-hidden aspect-square"><img
+                                src="assets/images/linh1.jpg" class="select-none w-full h-full object-cover" alt="">
+                        </div>
+                        <div class="swiper-slide rounded-xl overflow-hidden aspect-square"><img
+                                src="assets/images/linh2.jpg" class="select-none w-full h-full object-cover" alt="">
+                        </div>
+                        <div class="swiper-slide rounded-xl overflow-hidden aspect-square"><img
+                                src="assets/images/linh3.jpg" class="select-none w-full h-full object-cover" alt="">
+                        </div>
+                    </div>
+                    <!-- <svg class="hidden" width="129" height="129" viewBox="0 0 129 129" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <clipPath id="rhombus">
+                                <path
+                                    d="M53.123 5.04004C59.1761 -1.01305 68.9898 -1.01296 75.043 5.04004L123.127 53.123C129.18 59.1761 129.18 68.9899 123.127 75.043L75.043 123.127C68.9899 129.18 59.1761 129.18 53.123 123.127L5.04004 75.043C-1.01296 68.9898 -1.01304 59.1761 5.04004 53.123L53.123 5.04004Z" />
+                            </clipPath>
+                        </defs>
+                    </svg> -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="gallery" class="relative h-64 md:h-100 bg-linear-to-r from-pink-200 via-purple-100 to-blue-200 overflow-hidden shadow-inner">
+        <div class="bubble size-20 md:size-30 absolute rounded-full overflow-hidden truncate"><img
+                src="assets/images/gallery01.png" class="w-full h-full object-cover" alt="" />
+        </div>
+        <div class="bubble size-20 md:size-30 absolute rounded-full overflow-hidden truncate"><img
+                src="assets/images/gallery02.png" class="w-full h-full object-cover" alt="" />
+        </div>
+        <div class="bubble size-20 md:size-30 absolute rounded-full overflow-hidden truncate"><img
+                src="assets/images/gallery03.png" class="w-full h-full object-cover" alt="" />
+        </div>
+        <div class="bubble size-20 md:size-30 absolute rounded-full overflow-hidden truncate"><img
+                src="assets/images/gallery04.png" class="w-full h-full object-cover" alt="" />
+        </div>
+        <div class="bubble size-20 md:size-30 absolute rounded-full overflow-hidden truncate"><img
+                src="assets/images/gallery05.png" class="w-full h-full object-cover" alt="" />
+        </div>
+    </section>
+    <section id="bottom" class="py-10 md:py-20">
+        <div class="m-auto box-border w-full max-w-286 px-4 md:px-8">
+            <img src="assets/images/childhood.jpg"
+                class="h-auto max-h-120 md:max-h-200 m-auto rounded-3xl shadow-2xl transition-transform hover:scale-[1.02] duration-500 reveal reveal-up"
+                alt="" />
+        </div>
+    </section>
+    <footer class="mt-24">
+        <div class="m-auto box-border w-full max-w-286 px-4 md:px-8 my-20">
+            <nav class="flex gap-6 m-auto w-fit">
+                <a href="https://www.facebook.com/purin2903" class="size-12 md:size-16 transition-transform hover:scale-110"><img
+                        src="assets/images/facebook.png" alt="" /></a>
+                <a href="#" class="size-12 md:size-16 transition-transform hover:scale-110"><img
+                        src="assets/images/tiktok.png" alt="" /></a>
+                <a href="#" class="size-12 md:size-16 transition-transform hover:scale-110"><img
+                        src="assets/images/instagram.png" alt="" /></a>
+            </nav>
+        </div>
+        <div class="text-center bg-gray-300 py-2">© 2026 dieulinhpt</div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <script src="assets/js/script.js"></script>
 </body>
+
 </html>
